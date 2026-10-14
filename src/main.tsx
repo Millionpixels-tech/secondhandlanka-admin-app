@@ -38,10 +38,11 @@ import {
 import { auth, db, functions, configured, POLICY_VERSION } from "./firebase";
 import "./style.css";
 import { Analytics } from "./Analytics";
+import { Tickets } from "./Tickets";
 
 type Row = { id: string } & DocumentData;
 type RecordTab = "reports" | "users" | "listings";
-type Tab = RecordTab | "analytics";
+type Tab = RecordTab | "analytics" | "tickets";
 const errorMessage = (e: unknown) =>
   e instanceof Error ? e.message : "Something went wrong. Please retry.";
 const text = (value: unknown) => (typeof value === "string" ? value : "");
@@ -331,6 +332,7 @@ function Dashboard({ user }: { user: User }) {
           {(
             [
               ["reports", Flag, "Reports"],
+              ["tickets", Flag, "Support tickets"],
               ["users", Users, "Users"],
               ["listings", Package, "Listings"],
               ["analytics", BarChart3, "Analytics"],
@@ -367,22 +369,26 @@ function Dashboard({ user }: { user: User }) {
           <div>
             <p className="eyebrow">SECONDHAND LANKA</p>
             <h1>
-              {tab === "analytics"
-                ? "Marketplace analytics"
-                : tab === "reports"
-                  ? "Moderation queue"
-                  : tab === "users"
-                    ? "Marketplace members"
-                    : "Marketplace listings"}
+              {tab === "tickets"
+                ? "Support tickets"
+                : tab === "analytics"
+                  ? "Marketplace analytics"
+                  : tab === "reports"
+                    ? "Moderation queue"
+                    : tab === "users"
+                      ? "Marketplace members"
+                      : "Marketplace listings"}
             </h1>
             <p>
-              {tab === "analytics"
-                ? "Understand marketplace growth, buyer interest, and community activity."
-                : tab === "reports"
-                  ? "Review the evidence. Make a decision. Keep the community safe."
-                  : tab === "users"
-                    ? "Inspect member profiles and their listings."
-                    : "Browse listing details, sellers, and publication status."}
+              {tab === "tickets"
+                ? "Respond to member requests and track support progress."
+                : tab === "analytics"
+                  ? "Understand marketplace growth, buyer interest, and community activity."
+                  : tab === "reports"
+                    ? "Review the evidence. Make a decision. Keep the community safe."
+                    : tab === "users"
+                      ? "Inspect member profiles and their listings."
+                      : "Browse listing details, sellers, and publication status."}
             </p>
           </div>
           <button
@@ -434,7 +440,9 @@ function Dashboard({ user }: { user: User }) {
             )}
           </form>
         )}
-        {tab === "analytics" ? (
+        {tab === "tickets" ? (
+          <Tickets version={version} />
+        ) : tab === "analytics" ? (
           <Analytics version={version} />
         ) : (
           <Records

@@ -56,3 +56,18 @@ Serve `dist` on an HTTPS static host. Add the admin hostname to Firebase Authent
 From the mobile repository, after `npm --prefix functions run build`, run `npm run test:admin-ui` (Java 21+ required). This uses the demo Firebase emulators and launches the admin dev server on port 5176 with isolated test configuration. It checks denied ordinary-user login, moderator login, report review/history, account status, seller listing pagination, responsive layout, and logout. It does not write to the live Firebase project.
 
 Validation completed: admin lint/typecheck/build, dependency audit (0 vulnerabilities), 38 backend regression tests, 5 mobile browser smoke tests, and all admin browser checks. The panel has not been hosted, and no moderator claims were assigned.
+
+
+## Support tickets
+
+The Support tickets queue shows ticket IDs, owner IDs, categories/subcategories, optional attachments, status and conversation history. Moderators can reply and update ticket status; member notifications are sent by the backend. Attachments open at full size in a dialog in the same browser window, with previous/next controls, arrow-key navigation and Escape to close.
+
+Firebase Hosting configuration now targets a separate site, seconhand-acf04-admin. From this repository:
+
+```sh
+npm run build
+npx firebase-tools hosting:sites:create seconhand-acf04-admin --project seconhand-acf04
+npx firebase-tools deploy --project seconhand-acf04 --only hosting
+```
+
+Create the site only once. If the ID is unavailable, update hosting.site in firebase.json to your chosen site ID. Add the resulting hostname to Firebase Authentication's authorized domains. Deploy ticket functions, Firestore rules/indexes and Storage rules from the mobile repository first; see ../secondhand/docs/support-tickets.md for the complete sequence. No deployment has been performed by this change.
